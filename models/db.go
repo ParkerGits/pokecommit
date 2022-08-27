@@ -9,7 +9,7 @@ import (
 var db *gorm.DB
 
 func init() {
-	conn, err := gorm.Open(sqlite.Open("pokegit.db"), &gorm.Config{})
+	conn, err := gorm.Open(sqlite.Open("pokecommit.db"), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error opening database")
 	}

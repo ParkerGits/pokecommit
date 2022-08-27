@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/ParkerGits/pokegit/models"
+	"github.com/ParkerGits/pokecommit/models"
 	"github.com/mtslzr/pokeapi-go"
 	"github.com/qeesung/image2ascii/convert"
 )
