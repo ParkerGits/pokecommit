@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ParkerGits/pokecommit/services"
 	"github.com/ParkerGits/pokecommit/helpers"
 	"github.com/ldez/go-git-cmd-wrapper/v2/commit"
 	"github.com/ldez/go-git-cmd-wrapper/v2/git"
@@ -36,12 +35,9 @@ var (
 				return err
 			}
 			fmt.Println(output)
-			pkmn, err := services.FetchRandomPokemon()
-			if err != nil {
+			if err = helpers.CatchRandomPokemon(); err != nil {
 				return err
 			}
-			sprite, err := services.FetchAsciiSprite(pkmn.AsciiSpriteUrl)
-			helpers.PrintPkmn(pkmn, sprite)
 			return nil
 		},
 	}

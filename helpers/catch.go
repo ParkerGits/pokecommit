@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"github.com/ParkerGits/pokecommit/services"
+	"github.com/ParkerGits/pokecommit/models"
 )
 
 func CatchRandomPokemon() error {
@@ -13,7 +14,9 @@ func CatchRandomPokemon() error {
 	if err != nil {
 		return err
 	}
-	PrintPkmn(pkmn, sprite)
+	PrintEncounter(pkmn, sprite)
+	if err := models.CreatePokemon(&pkmn); err != nil {
+		return err
+	}
 	return nil
 }
-

@@ -8,7 +8,7 @@ import (
 	"github.com/ttacon/chalk"
 )
 
-func PrintPkmn(pkmn models.PokemonModel, sprite string) {
+func PrintEncounter(pkmn models.PokemonModel, sprite string) {
 	fmt.Println(sprite)
 	encounterTxt := GetTypeStyle(pkmn.Type1).Style(capitalizeName(pkmn.Name))
 	fmt.Printf(chalk.White.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.Black).Style("You encountered a %s\n"), encounterTxt)
