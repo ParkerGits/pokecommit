@@ -31,7 +31,7 @@ func FetchAsciiSprite(imgUrl string) (string, error) {
 	return convert.NewImageConverter().Image2ASCIIString(img, &convert.DefaultOptions), nil
 }
 
-func FetchPokemon() (pkmn models.PokemonModel, err error){
+func FetchRandomPokemon() (pkmn models.PokemonModel, err error){
 	randomPokemonId := rand.Int63n(NumPokemon)
 	resPokemon, err := pokeapi.Pokemon(strconv.FormatInt(randomPokemonId, 10));
 	if err != nil {
@@ -44,5 +44,9 @@ func FetchPokemon() (pkmn models.PokemonModel, err error){
 		return pkmn, nil;
 	}
 	pkmn.AsciiSpriteUrl = resPokemon.Sprites.FrontDefault
+	pkmn.Type1 = resPokemon.Types[0].Type.Name
+	if len(resPokemon.Types) > 1 {
+		pkmn.Type2 = resPokemon.Types[1].Type.Name
+	}
 	return pkmn, nil;
 }

@@ -9,6 +9,8 @@ type PokemonModel struct {
 	AsciiSpriteUrl string
 	Name string
 	IsShiny bool
+	Type1 string
+	Type2 string
 }
 
 func (p *PokemonModel) TableName() string {
