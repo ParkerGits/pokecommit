@@ -4,10 +4,8 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
-
-
 	"github.com/ParkerGits/pokecommit/models"
+	"github.com/ParkerGits/pokecommit/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +20,7 @@ var viewCmd = &cobra.Command{
 				return err
 		}
 		for _, pkmn := range allPkmn {
-			fmt.Println(pkmn.Name)
+			helpers.PrintView(&pkmn)
 		}
 		return nil
 	},

@@ -6,8 +6,10 @@ import (
 
 type PokemonModel struct {
 	gorm.Model
-	AsciiSpriteUrl string
+	PokeId uint16
 	Name string
+	Nickname string
+	AsciiSpriteUrl string
 	IsShiny bool
 	Type1 string
 	Type2 string

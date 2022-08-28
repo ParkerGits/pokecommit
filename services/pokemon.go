@@ -26,9 +26,8 @@ func FetchAsciiSprite(imgUrl string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	convertOptions := convert.DefaultOptions;
-	convertOptions.StretchedScreen = true;
-	return convert.NewImageConverter().Image2ASCIIString(img, &convert.DefaultOptions), nil
+	convertOptions := convert.DefaultOptions
+	return convert.NewImageConverter().Image2ASCIIString(img, &convertOptions), nil
 }
 
 func FetchRandomPokemon() (pkmn models.PokemonModel, err error){
@@ -37,6 +36,7 @@ func FetchRandomPokemon() (pkmn models.PokemonModel, err error){
 	if err != nil {
 		return pkmn, err
 	}
+	pkmn.PokeId = uint16(randomPokemonId)
 	pkmn.Name = resPokemon.Name
 	pkmn.IsShiny = rand.Intn(OddsShiny) == 1
 	if pkmn.IsShiny {
