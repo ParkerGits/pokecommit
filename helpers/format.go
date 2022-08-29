@@ -18,6 +18,7 @@ var (
 	period = baseTextStyle.Style(".")
 	space = baseTextStyle.Style(" ")
 	openParen = baseTextStyle.Style("(")
+	shiny = baseTextStyle.Style("✨")
 	closeParen = baseTextStyle.Style(")")
 	caughtText = func(pkmn *models.PokemonModel) string {
 		return fmt.Sprintf(baseTextStyle.Style("You caught the %s"), GetTypeStyle(pkmn.Type1).Style(capitalizeName(pkmn.Name)))
@@ -26,9 +27,12 @@ var (
 		return GetTypeStyle(pkmn.Type1).WithTextStyle(chalk.Bold).Style(capitalizeName(pkmn.Name))
 	}
 	formattedNickname = func(pkmn *models.PokemonModel) string {
-		return GetTypeStyle(pkmn.Type1).WithTextStyle(chalk.Bold).Style(capitalizeName(pkmn.Nickname))
+		return GetTypeStyle(pkmn.Type1).WithTextStyle(chalk.Bold).Style(pkmn.Nickname)
 	}
-	storedText = baseTextStyle.Style("has been stored in your PC")
+	storedText = baseTextStyle.Style("has been stored in your PC.")
+	removedPartyText = baseTextStyle.Style("has been removed from your party.")
+	addedPartyText = baseTextStyle.Style("has been added to your party!")
+	addedBoxText = baseTextStyle.Style("has been added to your box.")
 )
 
 func PrintEncounter(pkmn *models.PokemonModel) error {
@@ -54,11 +58,33 @@ func PrintStored(pkmn *models.PokemonModel) {
 }
 
 func PrintView(pkmn *models.PokemonModel) {
+	fmt.Println(FormattedPokemonName(pkmn))
+}
+
+func PrintRemoved(pkmn *models.PokemonModel) {
+	fmt.Println(FormattedPokemonName(pkmn) + space + removedPartyText)
+}
+
+func PrintAddedToBox(pkmn *models.PokemonModel) {
+	fmt.Println(FormattedPokemonName(pkmn) + space + addedBoxText)
+}
+
+func PrintAddedToParty(pkmn *models.PokemonModel) {
+	fmt.Println(FormattedPokemonName(pkmn) + space + addedPartyText)
+}
+
+func FormattedPokemonName(pkmn *models.PokemonModel) string {
+	var fmtName strings.Builder
 	if pkmn.Nickname != "" {
-		fmt.Println(formattedNickname(pkmn) + space + openParen + formattedName(pkmn) + closeParen)
-		return
+		fmtName.WriteString(formattedNickname(pkmn) + space + openParen + formattedName(pkmn) + closeParen)
+	} else {
+		fmtName.WriteString(formattedName(pkmn))
 	}
-	fmt.Println(formattedName(pkmn))
+	
+	if pkmn.IsShiny {
+		fmtName.WriteString(space + shiny)
+	}
+	return fmtName.String()
 }
 
 func capitalizeName(name string) string {

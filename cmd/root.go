@@ -3,6 +3,8 @@ Copyright © 2022 Parker Landon parkerjlandon@gmail.com
 */
 package cmd
 
+// TODO: would you like to add pokemon to your party?
+
 import (
 	"errors"
 	"fmt"
