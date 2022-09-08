@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"image/png"
 	"math/rand"
 	"net/http"
@@ -16,6 +17,8 @@ const (
 	OddsShiny = 100
 )
 
+var ErrEvolve = errors.New("could not evolve")
+
 func FetchAsciiSprite(imgUrl string) (string, error) {
 	resSprite, err := http.Get(imgUrl)
 	if err != nil {
@@ -30,23 +33,67 @@ func FetchAsciiSprite(imgUrl string) (string, error) {
 	return convert.NewImageConverter().Image2ASCIIString(img, &convertOptions), nil
 }
 
-func FetchRandomPokemon() (pkmn models.PokemonModel, err error){
+func FetchRandomPokemon() (*models.PokemonModel, error) {
 	randomPokemonId := rand.Int63n(NumPokemon)
-	resPokemon, err := pokeapi.Pokemon(strconv.FormatInt(randomPokemonId, 10));
+	isShiny := rand.Intn(OddsShiny) == 1
+	pokemonIdString := strconv.FormatInt(randomPokemonId, 10)
+	resPokemon, err := pokeapi.Pokemon(pokemonIdString);
 	if err != nil {
-		return pkmn, err
+		return nil, err
 	}
-	pkmn.PokeId = uint16(randomPokemonId)
-	pkmn.Name = resPokemon.Name
-	pkmn.IsShiny = rand.Intn(OddsShiny) == 1
-	if pkmn.IsShiny {
-		pkmn.AsciiSpriteUrl = resPokemon.Sprites.FrontShiny
-		return pkmn, nil;
+	evolvesTo, err := getEvolvesTo(pokemonIdString)
+	if err != nil {
+		return nil, err
 	}
-	pkmn.AsciiSpriteUrl = resPokemon.Sprites.FrontDefault
-	pkmn.Type1 = resPokemon.Types[0].Type.Name
-	if len(resPokemon.Types) > 1 {
-		pkmn.Type2 = resPokemon.Types[1].Type.Name
+	pkmn := models.NewPokemonModelFromFetch(resPokemon, evolvesTo, isShiny)
+	return pkmn, nil
+}
+
+func getEvolvesTo(pkmnId string) (string, error) {
+	species, err := pokeapi.PokemonSpecies(pkmnId);
+	currStageName := species.Name
+	if err != nil {
+		return "", err
 	}
-	return pkmn, nil;
+	evolutionChainUrl := species.EvolutionChain.URL
+	var i int
+	for i = len(evolutionChainUrl)-2; evolutionChainUrl[i] != '/'; i-- {}
+	evolutionChainId := evolutionChainUrl[i+1:len(evolutionChainUrl)-1]
+	evolutionChain, err := pokeapi.EvolutionChain(evolutionChainId)
+	if err != nil {
+		return "", err
+	}
+
+	if len(evolutionChain.Chain.EvolvesTo) == 0 {
+		return "", nil
+	}
+	if evolutionChain.Chain.Species.Name == currStageName {
+		return evolutionChain.Chain.EvolvesTo[0].Species.Name, nil
+	}
+	
+	if len(evolutionChain.Chain.EvolvesTo[0].EvolvesTo) == 0 {
+		return "", nil
+	}
+	if evolutionChain.Chain.EvolvesTo[0].Species.Name == currStageName {
+		return evolutionChain.Chain.EvolvesTo[0].EvolvesTo[0].Species.Name, nil
+	}
+
+	if evolutionChain.Chain.EvolvesTo[0].EvolvesTo[0].Species.Name == currStageName {
+		return "", nil
+	}
+	
+	return "", ErrEvolve
+}
+
+func FetchPokemon(id string, isShiny bool) (*models.PokemonModel, error) {
+	resPokemon, err := pokeapi.Pokemon(id);
+	if err != nil {
+		return nil, err
+	}
+	evolvesTo, err := getEvolvesTo(id)
+	if err != nil {
+		return nil, err
+	}
+	pkmn := models.NewPokemonModelFromFetch(resPokemon, evolvesTo, isShiny)
+	return pkmn, nil
 }

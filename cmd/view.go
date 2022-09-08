@@ -6,6 +6,7 @@ package cmd
 import (
 	"strings"
 
+	"github.com/ParkerGits/pokecommit/handlers"
 	"github.com/ParkerGits/pokecommit/helpers"
 	"github.com/ParkerGits/pokecommit/models"
 	"github.com/spf13/cobra"
@@ -27,13 +28,13 @@ var viewCmd = &cobra.Command{
 				return err
 		}
 		if len(filter) == 0 {
-			for _, pkmn := range allPkmn {
-				helpers.PrintView(&pkmn)
-			}
+			handlers.PrintAllPokemon(allPkmn);
 			return nil
 		}
+
+		lowerFilter := strings.ToLower(filter)
 		for _, pkmn := range allPkmn {
-				if(strings.Contains(pkmn.Name, filter) || strings.Contains(pkmn.Nickname, filter)) {
+				if(strings.Contains(strings.ToLower(pkmn.Name), lowerFilter) || strings.Contains(strings.ToLower(pkmn.Nickname), lowerFilter)) {
 					helpers.PrintView(&pkmn)
 				}
 		}

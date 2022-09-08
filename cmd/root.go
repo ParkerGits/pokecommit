@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ParkerGits/pokecommit/helpers"
+	"github.com/ParkerGits/pokecommit/handlers"
 	"github.com/ldez/go-git-cmd-wrapper/v2/commit"
 	"github.com/ldez/go-git-cmd-wrapper/v2/git"
 	"github.com/spf13/cobra"
@@ -36,7 +36,7 @@ var (
 				return err
 			}
 			fmt.Println(output)
-			if err = helpers.EngageRandomEncounter(); err != nil {
+			if err = handlers.EngageRandomEncounter(); err != nil {
 				return err
 			}
 			return nil

@@ -10,7 +10,6 @@ import (
 	"github.com/ParkerGits/pokecommit/models"
 	"github.com/spf13/cobra"
 )
-
 // partyCmd represents the party command
 var partyCmd = &cobra.Command{
 	Use:   "party",
