@@ -70,3 +70,7 @@ func PrintEmptyParty() {
 func PrintEvolved(preEvo *models.PokemonModel, evolution *models.PokemonModel) {
 	fmt.Println(yourPkmnText(preEvo) + space + evolvedText + space + formattedName(evolution) + exclamationMark)
 }
+
+func PrintRun() {
+	fmt.Println(runText)
+}

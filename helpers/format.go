@@ -51,6 +51,7 @@ var (
 	addedBoxText = baseTextStyle.Style("has been added to your box.")
 	partyEmptyText = baseTextStyle.Style("Your party is empty! You must capture this Pokemon or flee.")
 	evolvedText = baseTextStyle.Style("has evolved into")
+	runText = baseTextStyle.Style("You flee the battle...")
 	pokemonMoves = map[string][3]string{
 		"bug": {"bug buzz", "silver wind", "x-scissor"},
 		"dark": {"dark pulse", "knock off", "night slash"},

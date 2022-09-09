@@ -4,15 +4,13 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"strings"
-
 	"github.com/ParkerGits/pokecommit/handlers"
-	"github.com/ParkerGits/pokecommit/helpers"
 	"github.com/ParkerGits/pokecommit/models"
 	"github.com/spf13/cobra"
 )
 
 var filter string
+var party bool
 
 // viewCmd represents the view command
 var viewCmd = &cobra.Command{
@@ -27,23 +25,25 @@ var viewCmd = &cobra.Command{
 		if err := models.GetAllPokemon(&allPkmn); err != nil {
 				return err
 		}
-		if len(filter) == 0 {
-			handlers.PrintAllPokemon(allPkmn);
+
+		if party {
+			handlers.PrintPartyPokemon(&allPkmn)
 			return nil
 		}
 
-		lowerFilter := strings.ToLower(filter)
-		for _, pkmn := range allPkmn {
-				if(strings.Contains(strings.ToLower(pkmn.Name), lowerFilter) || strings.Contains(strings.ToLower(pkmn.Nickname), lowerFilter)) {
-					helpers.PrintView(&pkmn)
-				}
+		if len(filter) == 0 {
+			handlers.PrintAllPokemon(&allPkmn);
+			return nil
 		}
+
+		handlers.PrintFilteredPokemon(&allPkmn, filter)
 		return nil
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(viewCmd)
+	viewCmd.Flags().BoolVarP(&party, "party", "p", false, "View your party Pokemon.")
 	viewCmd.Flags().StringVarP(&filter, "filter", "f", "", "Filter your Pokemon by name or nickname.")
 	// Here you will define your flags and configuration settings.
 

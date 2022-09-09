@@ -3,8 +3,6 @@ Copyright © 2022 Parker Landon parkerjlandon@gmail.com
 */
 package cmd
 
-// TODO: would you like to add pokemon to your party?
-
 import (
 	"errors"
 	"fmt"
@@ -18,6 +16,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var (
+		ErrNoCommitMessage = errors.New("no commit message")
 		message string
 		rootCmd = &cobra.Command{
 		Use:   "pokecommit",
@@ -29,7 +28,7 @@ var (
 		pokecommit -m "Initial Commit"`,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(message) == 0 {
-				return errors.New("Please enter a commit message")
+				return ErrNoCommitMessage
 			}
 			output, err := git.Commit(commit.Message(message))
 			if err != nil {

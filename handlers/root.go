@@ -66,6 +66,9 @@ func handleSelectAction(pkmn *models.PokemonModel, action string) error {
 			return err
 		}
 		return nil
+	case "Run":
+		handleRun()
+		return nil
 	}
 	return nil
 }
@@ -131,6 +134,10 @@ func handleFight(foePkmn *models.PokemonModel) error {
 		evolvePokemon(&battlePkmn)
 	}
 	return nil;
+}
+
+func handleRun() {
+	helpers.PrintRun()
 }
 
 func evolvePokemon(pkmn *models.PokemonModel) error {
