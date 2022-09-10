@@ -1,4 +1,4 @@
-# pokecommit
+# pokecommit 🐢
 
 Catch a Pokemon with each commit! 😸
 
