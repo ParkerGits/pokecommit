@@ -81,3 +81,31 @@ func UpdatePokemon(pokemon *PokemonModel) error {
 	}
 	return nil
 }
+
+func ReplaceInParty(toReplace *PokemonModel, newMember *PokemonModel) error {
+	return db.Transaction(func(tx *gorm.DB) error {
+		toReplace.IsInParty = false
+		if err := UpdatePokemon(toReplace); err != nil {
+			return err
+		}
+		newMember.IsInParty = true
+		if err := UpdatePokemon(newMember); err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+func CreateAndReplaceInParty(toReplace *PokemonModel, newMember *PokemonModel) error {
+	return db.Transaction(func(tx *gorm.DB) error {
+		toReplace.IsInParty = false
+		if err := UpdatePokemon(toReplace); err != nil {
+			return err
+		}
+		newMember.IsInParty = true
+		if err := CreatePokemon(newMember); err != nil {
+			return err
+		}
+		return nil
+	})
+}

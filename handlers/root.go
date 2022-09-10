@@ -43,7 +43,7 @@ func EngageRandomEncounter() error {
 
 		err = handleSelectAction(pkmn, action)
 		if err == ErrEmptyPrty {
-			helpers.PrintEmptyParty()
+			helpers.PrintCatchOrFlee()
 			continue
 		}
 		if err != nil {
@@ -160,7 +160,7 @@ func addToPartyOrBox(pkmn *models.PokemonModel) error {
 	}
 
 	if len(partyPkmn) < 6 {
-		if err := addPokemon(pkmn, true); err != nil {
+		if err := createPokemon(pkmn, true); err != nil {
 			return err
 		}
 		return nil
@@ -175,44 +175,62 @@ func addToPartyOrBox(pkmn *models.PokemonModel) error {
 		return err
 	}
 	if res == "No" {
-		if err := addPokemon(pkmn, false); err != nil {
+		if err := createPokemon(pkmn, false); err != nil {
 			return err
 		}
 		return nil
 	}
-
-	partyNames := helpers.MapToString(partyPkmn, func(pkmn models.PokemonModel, index int) string {
-		return helpers.FormattedPokemonName(&pkmn)
-	})
-	replaceSelect := promptui.Select{
-		Label: "Your party is full! Choose a Pokemon to Replace:",
-		Items: append(partyNames, "❌ Cancel"),
-	}
-	index, _, err := replaceSelect.Run()
+	didReplace, err := replacePokemon(&partyPkmn, pkmn)
 	if err != nil {
 		return err
 	}
-
-	if index == 6 {
-		if err := addPokemon(pkmn, false); err != nil {
+	if !didReplace {
+		// add pokemon to box if it didn't replace a party member
+		if err := createPokemon(pkmn, false); err != nil {
 			return err
 		}
-		return nil
-	}
-
-	toReplace := &partyPkmn[index]
-	if err = removePokemonFromParty(toReplace); err != nil {
-		return err
-	}
-
-	if err = addPokemon(pkmn, true); err != nil {
-		return err
 	}
 	return nil
 }
 
-func addPokemon(pkmn *models.PokemonModel, inParty bool) error {
-	pkmn.IsInParty = inParty;
+func replacePokemon(partyPkmn *[]models.PokemonModel, newPkmn *models.PokemonModel) (bool, error) {
+	toReplace, err := selectPokemon(partyPkmn, "Your party is full! Choose a Pokemon to Replace:")
+	if err != nil {
+		return false, err
+	}
+	if toReplace == nil  {
+		return false, nil
+	}
+	if err = createAndReplacePokemonInParty(toReplace, newPkmn); err != nil {
+		return false, err
+	}
+	helpers.PrintReplacedPokemon(toReplace, newPkmn)
+	return true, nil
+}
+
+func selectPokemon(pkmn *[]models.PokemonModel, label string) (*models.PokemonModel, error) {
+	partyNames := helpers.MapToString(*pkmn, func(pkmn models.PokemonModel, index int) string {
+		return helpers.FormattedPokemonName(&pkmn)
+	})
+	replaceSelect := promptui.Select{
+		Label: label,
+		Items: append(partyNames, "❌ Cancel"),
+	}
+	index, _, err := replaceSelect.Run()
+	if err != nil {
+		return nil, err
+	}
+
+	if index == len(*pkmn) {
+		// cancelled
+		return nil, nil
+	}
+
+	return &(*pkmn)[index], nil
+}
+
+func createPokemon(pkmn *models.PokemonModel, inParty bool) error {
+	pkmn.IsInParty = inParty
 	if err := models.CreatePokemon(pkmn); err != nil {
 		return err
 	}
@@ -224,11 +242,6 @@ func addPokemon(pkmn *models.PokemonModel, inParty bool) error {
 	return nil
 }
 
-func removePokemonFromParty(pkmn *models.PokemonModel) error {
-	pkmn.IsInParty = false
-	if err := models.UpdatePokemon(pkmn); err != nil {
-		return err
-	}
-	helpers.PrintRemoved(pkmn)
-	return nil
+func createAndReplacePokemonInParty(toReplace *models.PokemonModel, newMember *models.PokemonModel) error {
+	return models.CreateAndReplaceInParty(toReplace, newMember)
 }

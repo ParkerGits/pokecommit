@@ -11,3 +11,13 @@ func MapToString(pkmn []models.PokemonModel, f func(models.PokemonModel, int) st
 	}
 	return mapped
 }
+
+func FilterPkmn(allPkmn *[]models.PokemonModel, callback func(models.PokemonModel) bool) *[]models.PokemonModel {
+	partyPkmn := []models.PokemonModel{}
+	for _, pkmn := range *allPkmn {
+		if callback(pkmn){
+			partyPkmn = append(partyPkmn, pkmn)
+		}
+	}
+	return &partyPkmn
+}

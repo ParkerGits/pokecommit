@@ -15,11 +15,12 @@ var party bool
 // viewCmd represents the view command
 var viewCmd = &cobra.Command{
 	Use:   "view",
-	Short: "View your captured Pokemon",
+	Short: "View your captured Pokemon.",
 	Long: `
 	View all the Pokemon captured through your commits.
-	User the --filter (-f) flag to filter your Pokemon
-	by name or nickname.`,
+	Use the --filter (-f) flag to filter your Pokemon
+	by name or nickname.
+	Use the --party (-p) flag to view your party.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		allPkmn := []models.PokemonModel{}
 		if err := models.GetAllPokemon(&allPkmn); err != nil {

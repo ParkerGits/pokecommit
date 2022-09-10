@@ -43,13 +43,17 @@ var (
 	yourPkmnText = func(pkmn *models.PokemonModel) string {
 		return fmt.Sprintf(baseTextStyle.Style("Your %s"), FormattedPokemonName(pkmn))
 	}
+	replacedText = func(pkmn *models.PokemonModel) string {
+		return fmt.Sprintf(baseTextStyle.Style("has been replaced with %s"), FormattedPokemonName(pkmn))
+	}
+	inYourPartyText = baseTextStyle.Style("in your party")
 	faintText = baseTextStyle.Style("has fainted")
 	readyToEvolveText = baseTextStyle.Style("is ready to evolve")
 	storedText = baseTextStyle.Style("has been stored in your PC.")
-	removedPartyText = baseTextStyle.Style("has been removed from your party.")
+	removedPartyText = baseTextStyle.Style("has been deposited from your party into your box.")
 	addedPartyText = baseTextStyle.Style("has been added to your party!")
 	addedBoxText = baseTextStyle.Style("has been added to your box.")
-	partyEmptyText = baseTextStyle.Style("Your party is empty! You must capture this Pokemon or flee.")
+	catchOrFleeText = baseTextStyle.Style("Your party is empty! You must capture this Pokemon or flee.")
 	evolvedText = baseTextStyle.Style("has evolved into")
 	runText = baseTextStyle.Style("You flee the battle...")
 	pokemonMoves = map[string][3]string{
@@ -71,6 +75,11 @@ var (
 		"steel": {"iron head", "flash cannon", "iron tail"},
 		"water": {"water pulse", "hydro pump", "waterfall"},
 	}
+	emptyPartyText = baseTextStyle.Style("Your party is empty. Go catch some Pokemon!")
+	badFilterText = baseTextStyle.Style("None of your Pokemon match the filter condition.")
+	noPokemonText = baseTextStyle.Style("You have no Pokemon. Commit your code and catch some Pokemon!")
+	noPokemonInBoxText = baseTextStyle.Style("You have no Pokemon in your box. Commit your code and catch more Pokemon!")
+	lastPokemonInPartyText = baseTextStyle.Style("You only have one Pokemon left in your party, cannot deposit.")
 )
 
 func FormattedPokemonName(pkmn *models.PokemonModel) string {

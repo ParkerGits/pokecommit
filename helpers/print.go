@@ -51,7 +51,7 @@ func PrintView(pkmn *models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn))
 }
 
-func PrintRemoved(pkmn *models.PokemonModel) {
+func PrintDeposited(pkmn *models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn) + space + removedPartyText)
 }
 
@@ -63,8 +63,8 @@ func PrintAddedToParty(pkmn *models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn) + space + addedPartyText)
 }
 
-func PrintEmptyParty() {
-	fmt.Println(partyEmptyText)
+func PrintCatchOrFlee() {
+	fmt.Println(catchOrFleeText)
 }
 
 func PrintEvolved(preEvo *models.PokemonModel, evolution *models.PokemonModel) {
@@ -73,4 +73,28 @@ func PrintEvolved(preEvo *models.PokemonModel, evolution *models.PokemonModel) {
 
 func PrintRun() {
 	fmt.Println(runText)
+}
+
+func PrintEmptyParty() {
+	fmt.Println(emptyPartyText)
+}
+
+func PrintBadFilter() {
+	fmt.Println(badFilterText)
+}
+
+func PrintNoPokemon() {
+	fmt.Println(noPokemonText)
+}
+
+func PrintReplacedPokemon(replaced *models.PokemonModel, new *models.PokemonModel) {
+	fmt.Println(FormattedPokemonName(replaced) + space + replacedText(new) + space + inYourPartyText + period)
+}
+
+func PrintCannotDepositLastPokemon() {
+	fmt.Println(lastPokemonInPartyText)
+}
+
+func PrintNoPokemonInBox() {
+	fmt.Println(noPokemonInBoxText)
 }
