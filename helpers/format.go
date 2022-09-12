@@ -15,7 +15,7 @@ var (
 	titleCaser = cases.Title(language.English)
 	baseTextStyle = chalk.White.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.Black)
 	encounterText = func(pkmn *models.PokemonModel) string {
-		return fmt.Sprintf(baseTextStyle.Style("You encounter a %s"), GetTypeStyle(pkmn.Type1).Style(CapitalizeName(pkmn.Name)))
+		return fmt.Sprintf(baseTextStyle.Style("You encounter a %s"), FormattedPokemonName(pkmn))
 	}
 	exclamationMark = baseTextStyle.Style("!")
 	period = baseTextStyle.Style(".")
