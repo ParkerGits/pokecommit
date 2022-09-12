@@ -25,7 +25,7 @@ var (
 	party = baseTextStyle.Style("⭐️")
 	closeParen = baseTextStyle.Style(")")
 	caughtText = func(pkmn *models.PokemonModel) string {
-		return fmt.Sprintf(baseTextStyle.Style("You caught the %s"), GetTypeStyle(pkmn.Type1).Style(CapitalizeName(pkmn.Name)))
+		return fmt.Sprintf(baseTextStyle.Style("You caught the %s"), FormattedPokemonName(pkmn))
 	}
 	formattedName = func(pkmn *models.PokemonModel) string {
 		return GetTypeStyle(pkmn.Type1).WithTextStyle(chalk.Bold).Style(CapitalizeName(pkmn.Name))
