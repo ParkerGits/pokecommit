@@ -1,7 +1,10 @@
 package models
 
 import (
+	"fmt"
 	"log"
+	"os"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -9,7 +12,12 @@ import (
 var db *gorm.DB
 
 func init() {
-	conn, err := gorm.Open(sqlite.Open("pokecommit.db"), &gorm.Config{})
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal("Error finding $HOME directory")	
+	}
+	_ = os.Mkdir(fmt.Sprintf("%s/pokecommit/", home), os.ModePerm)
+	conn, err := gorm.Open(sqlite.Open(fmt.Sprintf("%s/pokecommit/pokecommit.db", home)), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Error opening database")
 	}
