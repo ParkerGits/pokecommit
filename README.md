@@ -18,3 +18,5 @@ See more commands and flags with the help flag:
 ```
 pokecommit -h
 ```
+
+A database is created at `$HOME/pokecommit`. If you are tired of catching Pokemon, or you would like to reset your progress, you may delete this directory.
