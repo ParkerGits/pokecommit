@@ -7,7 +7,7 @@ import (
 	"github.com/ParkerGits/pokecommit/services"
 )
 
-func PrintEncounter(pkmn *models.PokemonModel) error {
+func PrintEncounter(pkmn models.PokemonModel) error {
 	sprite, err := services.FetchAsciiSprite(pkmn.AsciiFrontSpriteUrl)
 	if err != nil {
 		return err
@@ -17,7 +17,12 @@ func PrintEncounter(pkmn *models.PokemonModel) error {
 	return nil
 }
 
-func PrintBattle(pkmn *models.PokemonModel) error {
+func PrintBattle(pkmn models.PokemonModel) error {
+	if pkmn.AsciiBackSpriteUrl == "" {
+		fmt.Println(FormattedPokemonName(pkmn) + space + usedText(pkmn) + exclamationMark);
+		return nil;
+	}
+
 	sprite, err := services.FetchAsciiSprite(pkmn.AsciiBackSpriteUrl)
 	if err != nil {
 		return err
@@ -27,19 +32,19 @@ func PrintBattle(pkmn *models.PokemonModel) error {
 	return nil
 }
 
-func PrintWildFoeFaint(foePkmn *models.PokemonModel) {
+func PrintWildFoeFaint(foePkmn models.PokemonModel) {
 	fmt.Println(wildText(foePkmn) + space + faintText + period)
 }
 
-func PrintReadyToEvolve(pkmn *models.PokemonModel) {
+func PrintReadyToEvolve(pkmn models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn) + space + readyToEvolveText + exclamationMark)
 }
 
-func PrintCaught(pkmn *models.PokemonModel) {
+func PrintCaught(pkmn models.PokemonModel) {
 	fmt.Println(caughtText(pkmn) + exclamationMark + "\n")
 }
 
-func PrintStored(pkmn *models.PokemonModel) {
+func PrintStored(pkmn models.PokemonModel) {
 	if pkmn.Nickname != "" {
 		fmt.Println(formattedNickname(pkmn) + space + storedText)
 		return
@@ -47,19 +52,19 @@ func PrintStored(pkmn *models.PokemonModel) {
 	fmt.Println(formattedName(pkmn) + space + storedText)
 }
 
-func PrintView(pkmn *models.PokemonModel) {
+func PrintView(pkmn models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn))
 }
 
-func PrintDeposited(pkmn *models.PokemonModel) {
+func PrintDeposited(pkmn models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn) + space + removedPartyText)
 }
 
-func PrintAddedToBox(pkmn *models.PokemonModel) {
+func PrintAddedToBox(pkmn models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn) + space + addedBoxText)
 }
 
-func PrintAddedToParty(pkmn *models.PokemonModel) {
+func PrintAddedToParty(pkmn models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(pkmn) + space + addedPartyText)
 }
 
@@ -67,7 +72,7 @@ func PrintCatchOrFlee() {
 	fmt.Println(catchOrFleeText)
 }
 
-func PrintEvolved(preEvo *models.PokemonModel, evolution *models.PokemonModel) {
+func PrintEvolved(preEvo models.PokemonModel, evolution models.PokemonModel) {
 	fmt.Println(yourPkmnText(preEvo) + space + evolvedText + space + formattedName(evolution) + exclamationMark)
 }
 
@@ -87,7 +92,7 @@ func PrintNoPokemon() {
 	fmt.Println(noPokemonText)
 }
 
-func PrintReplacedPokemon(replaced *models.PokemonModel, new *models.PokemonModel) {
+func PrintReplacedPokemon(replaced models.PokemonModel, new models.PokemonModel) {
 	fmt.Println(FormattedPokemonName(replaced) + space + replacedText(new) + space + inYourPartyText + period)
 }
 

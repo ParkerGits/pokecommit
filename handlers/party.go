@@ -70,7 +70,7 @@ func addPokemonToParty(pkmn *models.PokemonModel) error {
 	if err := models.UpdatePokemon(pkmn); err != nil {
 		return err
 	}
-	helpers.PrintAddedToParty(pkmn)
+	helpers.PrintAddedToParty(*pkmn)
 	return nil
 }
 
@@ -79,6 +79,6 @@ func depositPokemonIntoBox(pkmn *models.PokemonModel) error {
 	if err := models.UpdatePokemon(pkmn); err != nil {
 		return err
 	}
-	helpers.PrintDeposited(pkmn)
+	helpers.PrintDeposited(*pkmn)
 	return nil
 }

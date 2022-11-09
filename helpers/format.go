@@ -14,7 +14,7 @@ import (
 var (
 	titleCaser = cases.Title(language.English)
 	baseTextStyle = chalk.White.NewStyle().WithTextStyle(chalk.Bold).WithBackground(chalk.Black)
-	encounterText = func(pkmn *models.PokemonModel) string {
+	encounterText = func(pkmn models.PokemonModel) string {
 		return fmt.Sprintf(baseTextStyle.Style("You encounter a %s"), FormattedPokemonName(pkmn))
 	}
 	exclamationMark = baseTextStyle.Style("!")
@@ -24,26 +24,26 @@ var (
 	shiny = baseTextStyle.Style("✨")
 	party = baseTextStyle.Style("⭐️")
 	closeParen = baseTextStyle.Style(")")
-	caughtText = func(pkmn *models.PokemonModel) string {
+	caughtText = func(pkmn models.PokemonModel) string {
 		return fmt.Sprintf(baseTextStyle.Style("You caught the %s"), FormattedPokemonName(pkmn))
 	}
-	formattedName = func(pkmn *models.PokemonModel) string {
+	formattedName = func(pkmn models.PokemonModel) string {
 		return GetTypeStyle(pkmn.Type1).WithTextStyle(chalk.Bold).Style(CapitalizeName(pkmn.Name))
 	}
-	formattedNickname = func(pkmn *models.PokemonModel) string {
+	formattedNickname = func(pkmn models.PokemonModel) string {
 		return GetTypeStyle(pkmn.Type1).WithTextStyle(chalk.Bold).Style(pkmn.Nickname)
 	}
-	usedText = func(pkmn *models.PokemonModel) string {
+	usedText = func(pkmn models.PokemonModel) string {
 		randMove := GetRandPokemonMove(pkmn)
 		return fmt.Sprintf(baseTextStyle.Style("used %s"), GetTypeStyle(pkmn.Type1).WithTextStyle(chalk.Bold).Style(titleCaser.String(randMove)))
 	}
-	wildText = func(pkmn *models.PokemonModel) string { 
+	wildText = func(pkmn models.PokemonModel) string { 
 		return fmt.Sprintf(baseTextStyle.Style("The wild %s"), FormattedPokemonName(pkmn))
 	}
-	yourPkmnText = func(pkmn *models.PokemonModel) string {
+	yourPkmnText = func(pkmn models.PokemonModel) string {
 		return fmt.Sprintf(baseTextStyle.Style("Your %s"), FormattedPokemonName(pkmn))
 	}
-	replacedText = func(pkmn *models.PokemonModel) string {
+	replacedText = func(pkmn models.PokemonModel) string {
 		return fmt.Sprintf(baseTextStyle.Style("has been replaced with %s"), FormattedPokemonName(pkmn))
 	}
 	inYourPartyText = baseTextStyle.Style("in your party")
@@ -61,6 +61,7 @@ var (
 		"dark": {"dark pulse", "knock off", "night slash"},
 		"dragon": {"dragon claw", "dragon pulse", "draco meteor"},
 		"electric": {"spark", "discharge", "thunder"},
+		"fairy": {"play rough", "moonblast", "dazzling gleam"},
 		"fighting": {"brick break", "focus blast", "close combat"},
 		"fire": {"flamethrower", "flare blitz", "fire punch"},
 		"flying": {"brave bird", "aerial ace", "hurricane"},
@@ -82,7 +83,7 @@ var (
 	lastPokemonInPartyText = baseTextStyle.Style("You only have one Pokemon left in your party, cannot deposit.")
 )
 
-func FormattedPokemonName(pkmn *models.PokemonModel) string {
+func FormattedPokemonName(pkmn models.PokemonModel) string {
 	var fmtName strings.Builder
 	if pkmn.Nickname != "" {
 		fmtName.WriteString(formattedNickname(pkmn) + space + openParen + formattedName(pkmn) + closeParen)
@@ -104,7 +105,7 @@ func CapitalizeName(name string) string {
 	return titleCaser.String(name)
 }
 
-func GetRandPokemonMove(pkmn *models.PokemonModel) string {
+func GetRandPokemonMove(pkmn models.PokemonModel) string {
 	randMoveIdx := rand.Intn(3)
 	return pokemonMoves[pkmn.Type1][randMoveIdx]
 }

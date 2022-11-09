@@ -2,7 +2,8 @@ package handlers
 
 import (
 	"errors"
-	"math/rand"
+	"fmt"
+	// "math/rand"
 
 	"github.com/ParkerGits/pokecommit/helpers"
 	"github.com/ParkerGits/pokecommit/models"
@@ -29,7 +30,7 @@ func EngageRandomEncounter() error {
 		return err
 	}
 	
-	helpers.PrintEncounter(pkmn)
+	helpers.PrintEncounter(*pkmn)
 
 	for {
 		actionSelect := promptui.Select{
@@ -62,7 +63,7 @@ func handleSelectAction(pkmn *models.PokemonModel, action string) error {
 		}
 		return nil
 	case "Fight":
-		if err := handleFight(pkmn); err != nil {
+		if err := handleFight(*pkmn); err != nil {
 			return err
 		}
 		return nil
@@ -74,7 +75,7 @@ func handleSelectAction(pkmn *models.PokemonModel, action string) error {
 }
 
 func handleCatch(pkmn *models.PokemonModel) error {
-	helpers.PrintCaught(pkmn)
+	helpers.PrintCaught(*pkmn)
 	nicknameSelect := promptui.Select{
 		Label: "Would you like to nickname your Pokemon?",
 		Items: yesNo,
@@ -101,26 +102,27 @@ func handleCatch(pkmn *models.PokemonModel) error {
 	return nil
 }
 
-func handleFight(foePkmn *models.PokemonModel) error {
+func handleFight(foePkmn models.PokemonModel) error {
 	prtyPkmn := []models.PokemonModel{};
 	if err := models.GetParty(&prtyPkmn); err != nil {
 		return err
 	}
-
 	if len(prtyPkmn) == 0 {
 		return ErrEmptyPrty
 	}
 
-	battlePkmn := prtyPkmn[rand.Intn(len(prtyPkmn))]
-	if err := helpers.PrintBattle(&battlePkmn); err != nil {
+	// battlePkmn := prtyPkmn[rand.Intn(len(prtyPkmn))]
+	battlePkmn := prtyPkmn[5]
+	if err := helpers.PrintBattle(battlePkmn); err != nil {
 		return err
 	}
+
 	helpers.PrintWildFoeFaint(foePkmn)
 	// ready to evolve
 	if battlePkmn.EvolvesTo == "" {
 		return nil
 	}
-	helpers.PrintReadyToEvolve(&battlePkmn)
+	helpers.PrintReadyToEvolve(battlePkmn)
 	// would you like to evolve
 	evolveSelect := promptui.Select{
 		Label: "Are you ready to evolve your Pokemon?",
@@ -131,7 +133,9 @@ func handleFight(foePkmn *models.PokemonModel) error {
 		return err
 	}
 	if res == "Yes" {
-		evolvePokemon(&battlePkmn)
+		if err = evolvePokemon(&battlePkmn); err != nil {
+			return err;
+		}
 	}
 	return nil;
 }
@@ -142,6 +146,7 @@ func handleRun() {
 
 func evolvePokemon(pkmn *models.PokemonModel) error {
 	evolution, err := services.FetchPokemon(pkmn.EvolvesTo, pkmn.IsShiny)
+	fmt.Printf("evolution: %v\n", evolution)
 	if err != nil {
 		return err
 	}
@@ -149,7 +154,7 @@ func evolvePokemon(pkmn *models.PokemonModel) error {
 	if err = pkmn.EvolveInto(evolution); err != nil {
 		return err
 	}
-	helpers.PrintEvolved(&preEvoPkmn, pkmn)
+	helpers.PrintEvolved(preEvoPkmn, *pkmn)
 	return nil
 }
 
@@ -204,13 +209,14 @@ func replacePokemon(partyPkmn *[]models.PokemonModel, newPkmn *models.PokemonMod
 	if err = createAndReplacePokemonInParty(toReplace, newPkmn); err != nil {
 		return false, err
 	}
-	helpers.PrintReplacedPokemon(toReplace, newPkmn)
+	helpers.PrintReplacedPokemon(*toReplace, *newPkmn)
 	return true, nil
 }
 
 func selectPokemon(pkmn *[]models.PokemonModel, label string) (*models.PokemonModel, error) {
+	// map slice of pokemon to slice of pokemon names
 	partyNames := helpers.MapToString(*pkmn, func(pkmn models.PokemonModel, index int) string {
-		return helpers.FormattedPokemonName(&pkmn)
+		return helpers.FormattedPokemonName(pkmn)
 	})
 	replaceSelect := promptui.Select{
 		Label: label,
@@ -235,10 +241,10 @@ func createPokemon(pkmn *models.PokemonModel, inParty bool) error {
 		return err
 	}
 	if pkmn.IsInParty {
-		helpers.PrintAddedToParty(pkmn)
+		helpers.PrintAddedToParty(*pkmn)
 		return nil
 	}
-	helpers.PrintAddedToBox(pkmn)
+	helpers.PrintAddedToBox(*pkmn)
 	return nil
 }
 

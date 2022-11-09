@@ -14,7 +14,7 @@ func PrintAllPokemon(allPkmn *[]models.PokemonModel) {
 	}
 
 	for _, pkmn := range *allPkmn {
-		helpers.PrintView(&pkmn)
+		helpers.PrintView(pkmn)
 	}
 }
 
@@ -22,7 +22,7 @@ func PrintPartyPokemon(allPkmn *[]models.PokemonModel) {
 	partyCount := 0
 	for _, pkmn := range *allPkmn {
 		if pkmn.IsInParty {
-			helpers.PrintView(&pkmn)
+			helpers.PrintView(pkmn)
 			partyCount++
 		}
 	}
@@ -37,7 +37,7 @@ func PrintFilteredPokemon(allPkmn *[]models.PokemonModel, filter string) {
 	filterCount := 0
 	for _, pkmn := range *allPkmn {
 			if(strings.Contains(strings.ToLower(pkmn.Name), lowerFilter) || strings.Contains(strings.ToLower(pkmn.Nickname), lowerFilter)) {
-				helpers.PrintView(&pkmn)
+				helpers.PrintView(pkmn)
 				filterCount++
 			}
 	}
