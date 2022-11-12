@@ -3,7 +3,7 @@ package handlers
 import (
 	"errors"
 	"fmt"
-	// "math/rand"
+	"math/rand"
 
 	"github.com/ParkerGits/pokecommit/helpers"
 	"github.com/ParkerGits/pokecommit/models"
@@ -111,8 +111,7 @@ func handleFight(foePkmn models.PokemonModel) error {
 		return ErrEmptyPrty
 	}
 
-	// battlePkmn := prtyPkmn[rand.Intn(len(prtyPkmn))]
-	battlePkmn := prtyPkmn[5]
+	battlePkmn := prtyPkmn[rand.Intn(len(prtyPkmn))]
 	if err := helpers.PrintBattle(battlePkmn); err != nil {
 		return err
 	}
